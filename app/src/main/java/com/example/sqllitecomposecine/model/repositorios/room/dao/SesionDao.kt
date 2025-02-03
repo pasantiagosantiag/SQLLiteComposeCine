@@ -1,0 +1,30 @@
+package com.example.sqllitecomposecine.model.repositorios.room.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.example.sqllitecomposecine.model.entidades.room.SesionRoom
+
+
+//@Dao
+interface SesionDao {
+   /* @Insert
+    suspend fun insert(item: SesionRoom)
+
+    @Query("SELECT * FROM SesionRoom")
+    fun getAll(): kotlinx.coroutines.flow.Flow<List<SesionRoom>>
+
+    @Query("SELECT * FROM SesionRoom WHERE SesionRoom.id = :ide")
+    suspend fun getById(ide: Int): SesionRoom?
+
+    @Update
+    suspend fun update(item: SesionRoom)
+
+    @Delete
+    suspend fun delete(item: SesionRoom)
+
+    @Query("DELETE FROM SesionRoom WHERE SesionRoom.id = :id")
+    suspend fun deleteById(id: Int)*/
+}
