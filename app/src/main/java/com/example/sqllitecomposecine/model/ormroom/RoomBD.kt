@@ -10,13 +10,15 @@ import com.example.sqllitecomposecine.model.entidades.room.SalaRoom
 import com.example.sqllitecomposecine.model.entidades.room.SesionRoom
 import com.example.sqllitecomposecine.model.repositorios.room.dao.PeliculaDao
 import com.example.sqllitecomposecine.model.repositorios.room.dao.SalaDao
+import com.example.sqllitecomposecine.model.repositorios.room.dao.SesionDao
 
 
-@Database(entities = [SalaRoom::class, PeliculaRoom::class], version = 1, exportSchema = false)
+@Database(entities = [SalaRoom::class, PeliculaRoom::class, SesionRoom::class], version = 1, exportSchema = false)
 abstract class RoomDB : RoomDatabase() {
     abstract fun salaDao(): SalaDao
 
     abstract fun peliculaDao(): PeliculaDao
+    abstract  fun sesionDao():SesionDao
     companion object {
         @Volatile
         private var INSTANCE: RoomDB? = null

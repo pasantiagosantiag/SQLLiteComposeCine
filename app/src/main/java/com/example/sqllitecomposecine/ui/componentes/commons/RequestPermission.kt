@@ -24,7 +24,7 @@ fun RequestPermission() {
     )
 
     LaunchedEffect(Unit) {
-        permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+        permissionLauncher.launch(android.Manifest.permission.READ_MEDIA_IMAGES)
     }
 
     if (hasPermission) {

@@ -70,9 +70,8 @@ class SalaRepositoryRoom(var db: RoomDB):  ASalaRepositorio() {
 
     override suspend fun add(item: Sala) {
         var tempo=transformObjectToRoom(item)
-        db.salaDao().insert(tempo)
-
-
+        val id=db.salaDao().insert(tempo)
+        item.id=id.toLong();
     }
 
 }

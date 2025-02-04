@@ -16,11 +16,13 @@ class PeliculaRepositoryRoom(var db: RoomDB):  APeliculaRepositorio() {
     fun transformRoomToObject(peliculaRoom: com.example.sqllitecomposecine.model.entidades.room.PeliculaRoom): Pelicula {
        var item= Pelicula()
         item.id=peliculaRoom.id.toLong()
+        item.nombre=peliculaRoom.nombre
         item.activo=peliculaRoom.activo
        // item.fecha=peliculaRoom.fe
         item.descripcion=peliculaRoom.descripcion
         item.duracion=peliculaRoom.duracion
         item.valoracion=peliculaRoom.valoracion
+        item.uri=peliculaRoom.uri
        return item;
     }
     fun transformObjectToRoom(pelicula: Pelicula): com.example.sqllitecomposecine.model.entidades.room.PeliculaRoom {
@@ -28,6 +30,7 @@ class PeliculaRepositoryRoom(var db: RoomDB):  APeliculaRepositorio() {
         item.id=pelicula.id.toInt()
         item.activo=pelicula.activo
         item.nombre=pelicula.nombre
+        item.uri=pelicula.uri
         item.descripcion=pelicula.descripcion
         item.duracion=pelicula.duracion
         item.valoracion=pelicula.valoracion
@@ -71,7 +74,8 @@ class PeliculaRepositoryRoom(var db: RoomDB):  APeliculaRepositorio() {
 
     override suspend fun add(item: Pelicula) {
         var tempo=transformObjectToRoom(item)
-        db.peliculaDao().insert(tempo)
+        var id=db.peliculaDao().insert(tempo)
+        item.id=id.toLong()
 
 
     }

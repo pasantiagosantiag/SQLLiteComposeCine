@@ -10,7 +10,7 @@ import com.example.sqllitecomposecine.model.entidades.room.SalaRoom
 @Dao
 interface SalaDao {
     @Insert
-    suspend fun insert(item: SalaRoom)
+    suspend fun insert(item: SalaRoom):Long
 
     @Query("SELECT * FROM SalaRoom")
     fun getAll(): kotlinx.coroutines.flow.Flow<List<SalaRoom>>

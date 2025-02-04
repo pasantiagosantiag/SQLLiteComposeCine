@@ -1,5 +1,7 @@
 package com.example.sqllitecomposecine.ui.componentes.peliculas
 
+import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,10 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
 import com.example.sqllitecomposecine.model.entidades.Pelicula
+import com.example.sqllitecomposecine.ui.componentes.commons.ImageDeDirectorioLocal
 import com.example.sqllitecomposecine.ui.componentes.commons.ImagePickerWithPermission
 import com.example.sqllitecomposecine.ui.viewmodels.PeliculaViewModel
 import org.koin.androidx.compose.koinViewModel
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PeliculaFormulario(
     expandido: Boolean, editable: State<Boolean>, save: (item: Pelicula) -> Unit, atras: () -> Unit
@@ -43,7 +47,7 @@ fun PeliculaFormulario(
     var descripcion by remember { mutableStateOf("") }
     var valoracion by remember { mutableStateOf<Int>(0) }
     var duracion by remember { mutableStateOf<Int>(0) }
-
+    var url by remember { mutableStateOf<Uri?>(null) }
 
     LaunchedEffect(selected) {
         nombre = selected.nombre
@@ -65,9 +69,10 @@ fun PeliculaFormulario(
 
 
         // Campo de nombre
-        OutlinedTextField(value = nombre,
+        OutlinedTextField(
+            value = nombre,
             onValueChange = {
-                nombre = it.replace("\t", "").replace("\n","");
+                nombre = it.replace("\t", "").replace("\n", "");
             },
             enabled = editable.value,
             label = { Text("Nombre") },
@@ -75,7 +80,7 @@ fun PeliculaFormulario(
         )
         OutlinedTextField(
             value = descripcion, onValueChange = {
-                descripcion =  it.replace("\t", "").replace("\n","");
+                descripcion = it.replace("\t", "").replace("\n", "");
             }, enabled = editable.value,
 
             label = { Text("Descripcion") }, modifier = Modifier.fillMaxWidth()
@@ -99,7 +104,7 @@ fun PeliculaFormulario(
             OutlinedTextField(
                 value = if (valoracion > 0) valoracion.toString() else "", onValueChange = { it ->
                     if (it.length <= 3) {
-                        var tempo =  it.replace("\t", "").replace("\n","").filter { it.isDigit() }
+                        var tempo = it.replace("\t", "").replace("\n", "").filter { it.isDigit() }
                         if (!tempo.equals("")) valoracion = tempo.toInt()
                     }
 
@@ -108,18 +113,16 @@ fun PeliculaFormulario(
                 label = { Text("Valoración") }, modifier = Modifier.fillMaxWidth()//.weight(0.8f)
             )
         }
-        ImagePickerWithPermission()
+        if(vm.selected.value.id<1)
+            ImagePickerWithPermission(onselect = { url = it })
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            /*Text(
-                "Columnas",
-                modifier = Modifier.weight(0.2f)
-            )*/
+
             OutlinedTextField(
                 value = if (duracion > 0) duracion.toString() else "", onValueChange = { it ->
                     if (it.length <= 3) {
-                        var tempo =  it.replace("\t", "").replace("\n","").filter { it.isDigit() }
+                        var tempo = it.replace("\t", "").replace("\n", "").filter { it.isDigit() }
                         if (!tempo.equals("")) duracion = it.filter { it.isDigit() }.toInt()
                     }
 
@@ -152,6 +155,7 @@ fun PeliculaFormulario(
                     u?.descripcion = descripcion.toString()
                     u?.valoracion = valoracion
                     u?.duracion = duracion
+                    u?.uri = url.toString()
                     u?.let { save(it) }
 
                 },

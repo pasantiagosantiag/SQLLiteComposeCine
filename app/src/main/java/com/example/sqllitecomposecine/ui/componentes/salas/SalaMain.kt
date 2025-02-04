@@ -13,8 +13,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.AnimatedPane
@@ -55,36 +57,42 @@ fun SalaMain(modifier: Modifier = Modifier, vm: SalaViewModel = koinViewModel())
     BackHandler(navigator.canNavigateBack()) {
         navigator.navigateBack()
     }
-    Column(modifier = modifier.padding(start = 4.dp)) {
-        if (searchview) SalaBuscador(
-            modifier = Modifier,
-            vm.buscadornombre,
-            vm.buscadordescripcion,
+    Scaffold(
+        floatingActionButton = {
+            //if(searchview) {
+            FloatingActionButton(onClick = {
+                vm.unSelect()
+                formularioEditable.value = true
+                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+            }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+            //}
+        }
+    ) { innerPadding ->
 
-            )
-        ListDetailPaneScaffold(modifier = Modifier,
-            directive = navigator.scaffoldDirective,
-            value = navigator.scaffoldValue,
-            listPane = {
-                Box() {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        // modifier = Modifier.padding(bottom = 10.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add, contentDescription = "Nuevo",
-                            // tint = MaterialTheme.colorScheme.primary, // Cambia el color
-                            modifier = Modifier.clickable {
-                                vm.unSelect()
-                                formularioEditable.value = true
-                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+        Column(modifier = modifier.padding(innerPadding)) {
+            Column(modifier = Modifier.padding(horizontal = 2.dp)) {
+                if (searchview) {
 
-                            }// Cambia el tamaño
+                    Text("Salas")
+
+                    SalaBuscador(
+                        modifier = Modifier,
+                        vm.buscadornombre,
+                        vm.buscadordescripcion,
 
                         )
-                        Text("Nuevo")
-                    }
+                } else
+
+                    Text("Editor salas")
+
+            }
+            ListDetailPaneScaffold(modifier = Modifier,
+                directive = navigator.scaffoldDirective,
+                value = navigator.scaffoldValue,
+                listPane = {
+
 
                     LazyColumn(
                         modifier = Modifier
@@ -110,7 +118,8 @@ fun SalaMain(modifier: Modifier = Modifier, vm: SalaViewModel = koinViewModel())
                                     vm.setSelected(elementos.value.get(it))
                                     formularioEditable.value = true;
                                     navigator.navigateTo(
-                                        ListDetailPaneScaffoldRole.Detail, elementos.value.get(it)
+                                        ListDetailPaneScaffoldRole.Detail,
+                                        elementos.value.get(it)
                                     )
                                 }
                             }, borrar = {
@@ -121,53 +130,27 @@ fun SalaMain(modifier: Modifier = Modifier, vm: SalaViewModel = koinViewModel())
 
                         }
                     }
-                }
-            },
-            detailPane = {
 
-                SalaFormulario(expandido = true, editable = formularioEditable, save = {
-                    vm.save(it)
-                    vm.unSelect()
-                }, atras = {
-                    //run {
-                    if (navigator.canNavigateBack()) navigator.navigateBack()
-                    //}
+                },
+                detailPane = {
+
+                    SalaFormulario(expandido = true, editable = formularioEditable, save = {
+                        vm.save(it)
+                        vm.unSelect()
+                        formularioEditable.value = true
+                        navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                    }, atras = {
+                        //run {
+                        if (navigator.canNavigateBack()) navigator.navigateBack()
+                        //}
+                    })
+
+
                 })
-
-
-            })
-    }
-}
-
-@Composable
-private fun SalaItem(
-    item: Sala,
-
-    ver: () -> Unit,
-    editar: () -> Unit,
-    borrar: () -> Unit
-) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Text("${item.nombre}",
-            modifier = Modifier.clickable {
-                ver()
-
-
-            }.weight(0.50f))
-        Button(onClick = {
-
-            editar()
-
-        }, modifier = Modifier.weight(0.25f)) {
-            Text(text = "Editar")
-        }
-        Button(onClick = {
-            borrar()
-
-        }, modifier = Modifier.weight(0.25f)) {
-            Text(text = "Borrar")
         }
     }
 }
+
+
 
 

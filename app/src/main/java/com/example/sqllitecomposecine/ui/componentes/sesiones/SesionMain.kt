@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.sqllitecomposecine.model.entidades.Sesion
+import com.example.sqllitecomposecine.ui.componentes.peliculas.PeliculaBuscador
 import com.example.sqllitecomposecine.ui.viewmodels.PeliculaViewModel
 import com.example.sqllitecomposecine.ui.viewmodels.SalaViewModel
 import com.example.sqllitecomposecine.ui.viewmodels.SesionViewModel
@@ -37,14 +40,14 @@ fun SesionMain(
     modifier: Modifier = Modifier,
     vm: SesionViewModel = koinViewModel(),
     peliculasvm: PeliculaViewModel = koinViewModel(),
-    salasvm:SalaViewModel= koinViewModel()
+    salasvm: SalaViewModel = koinViewModel()
 ) {
     val navigator = rememberListDetailPaneScaffoldNavigator<Sesion>()
     val elementos = vm.items.collectAsState()
     val formularioEditable = remember {
         mutableStateOf(false)
     }
-    val item= remember {
+    val item = remember {
         mutableStateOf(vm.selected.value)
     }
     val isListAndDetailVisible =
@@ -55,94 +58,109 @@ fun SesionMain(
     BackHandler(navigator.canNavigateBack()) {
         navigator.navigateBack()
     }
-    Column(modifier = modifier.padding(start = 4.dp)) {
-        /*if (searchview) SesionBuscador(
-            modifier = Modifier,
-            //vm.buscadornombrepelicula,
-            //vm.buscadordescripcion,
+    Scaffold(
+        floatingActionButton = {
+            //if(searchview) {
+            FloatingActionButton(onClick = {
+                vm.unSelect()
+                formularioEditable.value = true
+                navigator.navigateTo(
+                    ListDetailPaneScaffoldRole.Detail,
+                    item.value
+                )
+            }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+            //}
+        }
+    ) { innerPadding ->
+        Column(modifier = modifier.padding(innerPadding)) {
+            Column(modifier = Modifier.padding(horizontal = 2.dp)) {
+                if (searchview) {
 
-            )*/
-        ListDetailPaneScaffold(modifier = Modifier,
-            directive = navigator.scaffoldDirective,
-            value = navigator.scaffoldValue,
-            listPane = {
-                Box() {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                        // modifier = Modifier.padding(bottom = 10.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add, contentDescription = "Nuevo",
-                            // tint = MaterialTheme.colorScheme.primary, // Cambia el color
-                            modifier = Modifier.clickable {
-                                vm.unSelect()
-                                formularioEditable.value = true
-                                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail,item.value)
+                    Text("Sesiones")
 
-                            }
+                    SesionBuscador(
+                        modifier = Modifier,
+                        vm.buscadorpelicula,
+                        vm.buscadorsala,
 
                         )
-                        Text("Nuevo")
-                    }
+                } else
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(top = 32.dp)
-                    ) {
+                    Text("Editor de sesiones")
 
-                        items(elementos.value.size) {
-                            SesionItem(elementos.value.get(it), ver = {
-                                run {
-                                    vm.setSelected(elementos.value.get(it))
-                                    //item.value=elementos.value.get(it).pelicula
-                                    formularioEditable.value = false;
+            }
 
-                                    navigator.navigateTo(
-                                        ListDetailPaneScaffoldRole.Detail,
-                                        elementos.value.get(it)
-                                    )
-                                }
-                            }, editar = {
+            ListDetailPaneScaffold(modifier = Modifier,
+                directive = navigator.scaffoldDirective,
+                value = navigator.scaffoldValue,
+                listPane = {
+
+
+
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 32.dp)
+                        ) {
+
+                            items(elementos.value.size) {
+                                SesionItem(elementos.value.get(it), ver = {
+                                    run {
+                                        vm.setSelected(elementos.value.get(it))
+                                        //item.value=elementos.value.get(it).pelicula
+                                        formularioEditable.value = false;
+
+                                        navigator.navigateTo(
+                                            ListDetailPaneScaffoldRole.Detail,
+                                            elementos.value.get(it)
+                                        )
+                                    }
+                                }, editar = {
+                                    run {
+                                        vm.setSelected(elementos.value.get(it))
+                                        formularioEditable.value = true;
+                                        item.value = elementos.value.get(it)
+                                        navigator.navigateTo(
+                                            ListDetailPaneScaffoldRole.Detail,
+                                            elementos.value.get(it)
+                                        )
+                                    }
+                                }, borrar = {
+                                    run {
+                                        vm.removeSesion(elementos.value.get(it))
+                                    }
+                                })
+
+                            }
+                        }
+
+                },
+                detailPane = {
+                    navigator.currentDestination?.content?.let {
+
+                        SesionFormulario(expandido = true,
+                            editable = formularioEditable,
+                            save = {
+                                vm.save(it)
+                                vm.unSelect()
+                                item.value = vm.selected.value
+                            },
+                            peliculas = peliculasvm.items.collectAsState(),
+                            salas = salasvm.items.collectAsState(),
+                            item = it,
+                            atras = {
                                 run {
-                                    vm.setSelected(elementos.value.get(it))
-                                    formularioEditable.value = true;
-                                    item.value=elementos.value.get(it)
-                                    navigator.navigateTo(
-                                        ListDetailPaneScaffoldRole.Detail, elementos.value.get(it)
-                                    )
-                                }
-                            }, borrar = {
-                                run {
-                                    vm.removeSesion(elementos.value.get(it))
+                                    if (navigator.canNavigateBack()) navigator.navigateBack()
                                 }
                             })
 
-                        }
                     }
-                }
-            },
-            detailPane = {
-                navigator.currentDestination?.content?.let {
-
-                    SesionFormulario(expandido = true, editable = formularioEditable, save = {
-                        vm.save(it)
-                        vm.unSelect()
-                        item.value=vm.selected.value
-                    },
-                        peliculas = peliculasvm.items.collectAsState(),
-                        salas = salasvm.items.collectAsState(),
-                        item =it,
-                        atras = {
-                            run {
-                                if (navigator.canNavigateBack()) navigator.navigateBack()
-                            }
-                        })
-
-                }
-            })
+                })
+        }
     }
 }
+
 
 

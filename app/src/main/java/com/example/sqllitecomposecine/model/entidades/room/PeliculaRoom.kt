@@ -31,7 +31,8 @@ data class PeliculaRoom(
 
     var valoracion:Int,
     var activo:Boolean,
-    var duracion:Int
+    var duracion:Int,
+    var uri:String,
 ) {
-    constructor() : this(0,"","",0,false,0)
+    constructor() : this(0,"","",0,false,0,"")
 }

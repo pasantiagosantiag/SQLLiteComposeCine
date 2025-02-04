@@ -87,6 +87,10 @@ dependencies {
     //SVG
     implementation("com.caverock:androidsvg:1.4")
 
+    //coil para imágenes
+    implementation("io.coil-kt.coil3:coil-compose:3.0.4")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
+
 //room
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)

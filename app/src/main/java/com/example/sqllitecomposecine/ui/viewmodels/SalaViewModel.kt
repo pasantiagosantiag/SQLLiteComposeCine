@@ -55,8 +55,6 @@ class SalaViewModel(private val salaRepositorio: ASalaRepositorio) : ViewModel()
         viewModelScope.launch {
             //se actualiza el listado principal
             var nueva = _items.value.toMutableList()
-
-
             if (item.id == 0L) {
                 salaRepositorio.add(item)
                 nueva.add(item)
@@ -64,12 +62,10 @@ class SalaViewModel(private val salaRepositorio: ASalaRepositorio) : ViewModel()
             } else {
                 salaRepositorio.update(item)
                 nueva[nueva.indexOfFirst { it.id == item.id }] = item
+                _items.value.clear()
                 _items.value = nueva
             }
-            /* var tempo=_items.value;
-             tempo.add(sala)
-             salaRepositorio.add(sala)
-             _items.value=tempo*/
+
         }
     }
 

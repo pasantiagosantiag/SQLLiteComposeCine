@@ -21,14 +21,15 @@ private lateinit var db:SQLiteDatabase
         item.activo=c.getInt(c.getColumnIndexOrThrow("activo"))>0;
         item.nombre=c.getString(c.getColumnIndexOrThrow("nombre"));
         item.descripcion=c.getString(c.getColumnIndexOrThrow("descripcion"));
-       // item.fecha=c.getInt(c.getColumnIndexOrThrow("filas"))
+       item.uri=c.getString(c.getColumnIndexOrThrow("uri"));
+        // item.fecha=c.getInt(c.getColumnIndexOrThrow("filas"))
         item.duracion=c.getInt(c.getColumnIndexOrThrow("duracion"))
         item.valoracion=c.getInt(c.getColumnIndexOrThrow("valoracion"))
         return item;
     }
     override suspend fun getAll(): List<Pelicula> {
 
-        val projection = arrayOf("id", "nombre","fecha","valoracion","duracion", "activo", "descripcion")
+        val projection = arrayOf("id", "nombre","fecha","uri","valoracion","duracion", "activo", "descripcion")
         var elements = ArrayList<Pelicula>();
         val cursor = db.query(
             TABLENAME,   // The table to query
@@ -72,7 +73,7 @@ private lateinit var db:SQLiteDatabase
         val values = ContentValues().apply {
             put("nombre",item.nombre)
             put("activo",item.activo)
-
+            put("uri",item.uri)
             put("descripcion",item.descripcion)
             put("duracion",item.duracion)
             put("valoracion",item.valoracion)
@@ -95,7 +96,7 @@ private lateinit var db:SQLiteDatabase
         val values = ContentValues().apply {
             put("nombre",item.nombre)
             put("activo",item.activo)
-
+            put("uri",item.uri)
             put("descripcion",item.descripcion)
             put("duracion",item.duracion)
             put("valoracion",item.valoracion)

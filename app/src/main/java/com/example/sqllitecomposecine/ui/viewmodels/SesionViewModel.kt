@@ -20,23 +20,23 @@ class SesionViewModel(val repositorio: ASesionRepositorio ) : ViewModel() {
     var selected: StateFlow<Sesion> = _selected
 
     //para el buscador
-    var buscadornombrepelicula = MutableStateFlow("")
-   // var buscadordescripcion = MutableStateFlow("")
-    val items = combine(_items, buscadornombrepelicula //, buscadordescripcion
-    ) { items, nombre //, descripcion
+    var buscadorpelicula = MutableStateFlow("")
+    var buscadorsala = MutableStateFlow("")
+    val items = combine(_items, buscadorpelicula,buscadorsala //, buscadordescripcion
+    ) { items, pelicula, sala
        ->
         items.filter {
-            if (nombre.isBlank())
+            if (pelicula.isBlank())
                 true
             else {
-                it.pelicula.nombre.lowercase().contains(nombre.lowercase())
+                it.pelicula.nombre.lowercase().contains(pelicula.lowercase())
             }
-        }/*.filter {
-            if (descripcion.isBlank())
+        }.filter {
+            if (sala.isBlank())
                 true
             else
-                it.descripcion.lowercase().contains(descripcion.lowercase())
-        }*/
+                it.sala.nombre.lowercase().contains(sala.lowercase())
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Lazily,

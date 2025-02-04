@@ -1,24 +1,21 @@
 package com.example.sqllitecomposecine.ui.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sqllitecomposecine.model.entidades.Pelicula
 import com.example.sqllitecomposecine.model.repositorios.APeliculaRepositorio
-import com.example.sqllitecomposecine.model.repositorios.IRepositorio
-import com.example.sqllitecomposecine.model.repositorios.memoria.PeliculaRepositioEnMemoria
+import com.example.sqllitecomposecine.servicios.PeliculaServicio
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
-import org.koin.java.KoinJavaComponent.inject
 
-class PeliculaViewModel(private val repositorio: APeliculaRepositorio) : ViewModel() {
+class PeliculaViewModel(private val repositorio: APeliculaRepositorio, androidContext: Context) : ViewModel() {
     private val _selected = MutableStateFlow<Pelicula>(Pelicula())
+    private val servicio = PeliculaServicio(repositorio,androidContext)
 
     private var _items = MutableStateFlow<MutableList<Pelicula>>(mutableListOf())
 
@@ -47,7 +44,7 @@ class PeliculaViewModel(private val repositorio: APeliculaRepositorio) : ViewMod
     )
     init {
         viewModelScope.launch {
-            _items.value.addAll(repositorio.getAll().toList())
+            _items.value.addAll(servicio.getAll())
         }
     }
 
@@ -58,7 +55,9 @@ class PeliculaViewModel(private val repositorio: APeliculaRepositorio) : ViewMod
 
 
             if (item.id == 0L) {
-                repositorio.add(item)
+
+                servicio.insert(item)
+                //repositorio.add(item)
                 nueva.add(item)
                 _items.value = nueva
             } else {
@@ -87,7 +86,7 @@ class PeliculaViewModel(private val repositorio: APeliculaRepositorio) : ViewMod
             var nuevo = _items.value.toMutableList()
             nuevo.remove(item)
             _items.value = nuevo
-            repositorio.removeById(item.id)
+            servicio.delete(item)
             //si el seleccionado es el mismo se cambia
             if (item.id == selected.value.id) {
                 unSelect()

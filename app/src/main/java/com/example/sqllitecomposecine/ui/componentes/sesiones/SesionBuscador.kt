@@ -18,12 +18,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 @Composable
 fun SesionBuscador(
     modifier: Modifier=Modifier,
-    buscadornombre: MutableStateFlow<String>,
+    buscadorpelicula: MutableStateFlow<String>,
+    buscadorsala:MutableStateFlow<String>
    // buscadordescripcion: MutableStateFlow<String>,
 
 ) {
-    val nombre = buscadornombre.collectAsState()
-   // val descripcion = buscadordescripcion.collectAsState()
+    val pelicula = buscadorpelicula.collectAsState()
+    val sala = buscadorsala.collectAsState()
 
     Row(
         modifier = modifier
@@ -35,23 +36,23 @@ fun SesionBuscador(
             modifier = Modifier.weight(0.5f).padding(horizontal = 2.dp)
         ) {
             OutlinedTextField(
-                value = nombre.value,
+                value = pelicula.value,
                 //se elimina el tabulador
-                onValueChange = { buscadornombre.value = it.replace("\t", "").replace("\n","") },
+                onValueChange = { buscadorpelicula.value = it.replace("\t", "").replace("\n","") },
                 label = { Text("Nombre") },
                 modifier = Modifier.fillMaxWidth()
             )
         }
-      /*  Column(
+        Column(
             modifier = Modifier.weight(0.5f).padding(horizontal = 2.dp)
         ) {
             OutlinedTextField(
-                value = descripcion.value,
-                onValueChange = { buscadordescripcion.value = it.replace("\t", "").replace("\n","") },
+                value = sala.value,
+                onValueChange = { buscadorsala.value = it.replace("\t", "").replace("\n","") },
                 label = { Text("Descripcion") },
                 modifier = Modifier.fillMaxWidth()
             )
-        }*/
+        }
 
 
     }

@@ -26,7 +26,7 @@ import java.io.OutputStream
 
 
 @Composable
-fun ImagePickerWithPermission() {
+fun ImagePickerWithPermission(onselect:(url:Uri)->Unit) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var hasPermission by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -81,8 +81,11 @@ fun ImagePickerWithPermission() {
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
             imageUri = uri // Guarda la URI de la imagen seleccionada
+            uri?.let {
+                onselect(uri)
+            }
 
-            copyFileFromUri(uri!!,getFileName(context,uri)!!)
+           // copyFileFromUri(uri!!,getFileName(context,uri)!!)
             Log.i("log",uri.toString())
         }
     )
@@ -103,15 +106,12 @@ fun ImagePickerWithPermission() {
 
 
         } else {
-            Text("Permiso denegado. No se puede acceder a la galería.",
-                modifier=Modifier.clickable {
 
-                })
             Button(onClick = {
                // permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 imagePickerLauncher.launch("image/*")
             }) {
-                Text("permiso")
+                Text("Imagen")
             }
         }
     }

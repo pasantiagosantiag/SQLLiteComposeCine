@@ -112,10 +112,7 @@ fun SalaFormulario(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            /*Text(
-                "Columnas",
-                modifier = Modifier.weight(0.2f)
-            )*/
+
             OutlinedTextField(
                 value = if (columnas > 0) columnas.toString() else "", onValueChange = { it ->
                     if (it.length <= 3) {
@@ -153,7 +150,7 @@ fun SalaFormulario(
                     u?.filas = filas
                     u?.columnas = columnas
                     u?.let { save(it) }
-
+                    vm.unSelect()
                 },
 
 
