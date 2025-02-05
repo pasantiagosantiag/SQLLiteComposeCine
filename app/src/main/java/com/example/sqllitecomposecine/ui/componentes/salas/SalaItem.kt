@@ -3,6 +3,9 @@ package com.example.sqllitecomposecine.ui.componentes.salas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,13 +35,19 @@ fun SalaItem(
             editar()
 
         }, modifier = Modifier.weight(0.25f)) {
-            Text(text = "Editar")
+            androidx.compose.material3.Icon(
+                imageVector = Icons.Filled.Edit,
+                contentDescription = "Editar",
+            )
         }
         Button(onClick = {
             borrar()
 
         }, modifier = Modifier.weight(0.25f)) {
-            Text(text = "Borrar")
+            androidx.compose.material3.Icon(
+                imageVector = Icons.Filled.Delete,
+                contentDescription = "Borrar",
+            )
         }
     }
 }

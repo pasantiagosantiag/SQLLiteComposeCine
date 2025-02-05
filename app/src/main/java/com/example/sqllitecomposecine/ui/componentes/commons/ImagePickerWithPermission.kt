@@ -11,6 +11,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -80,13 +83,13 @@ fun ImagePickerWithPermission(onselect:(url:Uri)->Unit) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri: Uri? ->
-            imageUri = uri // Guarda la URI de la imagen seleccionada
+            imageUri = uri
             uri?.let {
+                //se ejeculta la lambda pasada c omo parámetro
                 onselect(uri)
             }
 
-           // copyFileFromUri(uri!!,getFileName(context,uri)!!)
-            Log.i("log",uri.toString())
+
         }
     )
     Column(
@@ -111,7 +114,10 @@ fun ImagePickerWithPermission(onselect:(url:Uri)->Unit) {
                // permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
                 imagePickerLauncher.launch("image/*")
             }) {
-                Text("Imagen")
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Filled.Photo,
+                    contentDescription = "Borrar",
+                )
             }
         }
     }

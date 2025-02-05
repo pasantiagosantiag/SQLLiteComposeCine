@@ -1,6 +1,6 @@
 package com.example.sqllitecomposecine
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,36 +9,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-
-
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.sqllitecomposecine.ui.theme.SQLLiteComposeCineTheme
-import androidx.compose.ui.unit.dp
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.adaptive.layout.ListDetailPaneScaffold
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
-import com.example.sqllitecomposecine.model.repositorios.APeliculaRepositorio
-import com.example.sqllitecomposecine.model.repositorios.ASalaRepositorio
-import com.example.sqllitecomposecine.model.repositorios.ASesionRepositorio
-import com.example.sqllitecomposecine.model.repositorios.nativo.PeliculaRepositoryNativo
-import com.example.sqllitecomposecine.model.repositorios.nativo.SalaRepositoryNativo
-import com.example.sqllitecomposecine.model.repositorios.nativo.SesionRepositoryNativo
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.sqllitecomposecine.model.sqlnativo.AplicacionSQLiteOpenHelper
 import com.example.sqllitecomposecine.ui.componentes.Principal
-import com.example.sqllitecomposecine.ui.componentes.salas.SalaMain
+import com.example.sqllitecomposecine.ui.theme.SQLLiteComposeCineTheme
 import com.pasantiago.composesqllite.appModule
-import org.koin.android.ext.android.inject
 import org.koin.android.ext.koin.androidContext
 import org.koin.compose.KoinApplication
-import org.koin.compose.koinInject
 
 
 class MainActivity : ComponentActivity() {
-
+   //se define al inicio y se añade al contexto
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

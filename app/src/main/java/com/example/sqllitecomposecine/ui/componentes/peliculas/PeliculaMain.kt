@@ -135,7 +135,7 @@ fun PeliculaMain(modifier: Modifier = Modifier, vm: PeliculaViewModel = koinView
                         //run {
                         if (navigator.canNavigateBack()) navigator.navigateBack()
                         //}
-                    })
+                    },koinInject())
 
 
                 })

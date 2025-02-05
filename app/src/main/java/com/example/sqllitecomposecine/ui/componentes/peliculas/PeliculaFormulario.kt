@@ -1,7 +1,9 @@
 package com.example.sqllitecomposecine.ui.componentes.peliculas
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
@@ -26,16 +32,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import coil3.compose.rememberAsyncImagePainter
 import com.example.sqllitecomposecine.model.entidades.Pelicula
+import com.example.sqllitecomposecine.ui.componentes.commons.CapturarImagen
 import com.example.sqllitecomposecine.ui.componentes.commons.ImageDeDirectorioLocal
 import com.example.sqllitecomposecine.ui.componentes.commons.ImagePickerWithPermission
 import com.example.sqllitecomposecine.ui.viewmodels.PeliculaViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.io.File
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun PeliculaFormulario(
-    expandido: Boolean, editable: State<Boolean>, save: (item: Pelicula) -> Unit, atras: () -> Unit
+    expandido: Boolean, editable: State<Boolean>, save: (item: Pelicula) -> Unit, atras: () -> Unit,
+    context: Context,
 ) {
     // Estados para los campos
     val vm: PeliculaViewModel = koinViewModel()
@@ -47,18 +58,19 @@ fun PeliculaFormulario(
     var descripcion by remember { mutableStateOf("") }
     var valoracion by remember { mutableStateOf<Int>(0) }
     var duracion by remember { mutableStateOf<Int>(0) }
-    var url by remember { mutableStateOf<Uri?>(null) }
-
+    var uri by remember { mutableStateOf<Uri?>(null) }
+    var fichero by remember { mutableStateOf("") }
+    var id by remember { mutableStateOf(0L) }
+    //cambio del viewmodel
     LaunchedEffect(selected) {
         nombre = selected.nombre
         activo = selected.activo
         descripcion = selected.descripcion
         valoracion = selected.valoracion
         duracion = selected.duracion
+        fichero = selected.uri
+        id = selected.id
     }
-
-
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -85,22 +97,11 @@ fun PeliculaFormulario(
 
             label = { Text("Descripcion") }, modifier = Modifier.fillMaxWidth()
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                "Activo"
-            )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text("Activo")
             Checkbox(checked = activo, enabled = editable.value, onCheckedChange = { activo = it })
         }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            /*Text(
-                "Filas",
-                modifier = Modifier.weight(0.2f)
-
-            )*/
+        Row(verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
                 value = if (valoracion > 0) valoracion.toString() else "", onValueChange = { it ->
                     if (it.length <= 3) {
@@ -109,12 +110,13 @@ fun PeliculaFormulario(
                     }
 
                 }, enabled = editable.value,
-
                 label = { Text("Valoración") }, modifier = Modifier.fillMaxWidth()//.weight(0.8f)
             )
         }
-        if(vm.selected.value.id<1)
-            ImagePickerWithPermission(onselect = { url = it })
+        if (id > 0) {
+            ImageDeDirectorioLocal(modifier = Modifier, fileName = fichero, context = context)
+
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
@@ -136,6 +138,7 @@ fun PeliculaFormulario(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterHorizontally)
+
                 .alpha(if (editable.value == true) 1.0f else 0.0f),
             horizontalArrangement = Arrangement.Center, // Centers content horizontally
             verticalAlignment = Alignment.CenterVertically
@@ -144,9 +147,11 @@ fun PeliculaFormulario(
             Button(
                 onClick = {
                     var u: Pelicula?
+                    //si es nuevo
                     if (selected == null || selected.id < 1) {
                         u = Pelicula()
-
+                        //solo si es la primera fotografia
+                        u?.uri = uri.toString()
                     } else {
                         u = selected
                     }
@@ -155,15 +160,20 @@ fun PeliculaFormulario(
                     u?.descripcion = descripcion.toString()
                     u?.valoracion = valoracion
                     u?.duracion = duracion
-                    u?.uri = url.toString()
                     u?.let { save(it) }
 
-                },
-
-
-                ) {
-                Text("Guardar")
+                }
+            ) {
+                androidx.compose.material3.Icon(
+                    imageVector = Icons.Filled.Save,
+                    contentDescription = "Guardar",
+                )
             }
+             if (id <= 0)
+                 CapturarImagen(onselect = { uri = it })
+               //  ImagePickerWithPermission(onselect = { uri = it })
+
+
             if (!expandido) {
                 Button(
                     onClick = {
@@ -171,7 +181,10 @@ fun PeliculaFormulario(
                     }, modifier = Modifier.padding(start = 10.dp)
 
                 ) {
-                    Text("Volver")
+                    androidx.compose.material3.Icon(
+                        imageVector = Icons.Filled.ArrowBackIosNew,
+                        contentDescription = "Volver",
+                    )
                 }
             }
         }

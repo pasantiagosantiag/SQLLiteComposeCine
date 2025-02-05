@@ -91,6 +91,11 @@ dependencies {
     implementation("io.coil-kt.coil3:coil-compose:3.0.4")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.4")
 
+    //datastore
+    //implementation("androidx.datastore:datastore-preferences:1.1.2")
+    //camara
+
+
 //room
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
