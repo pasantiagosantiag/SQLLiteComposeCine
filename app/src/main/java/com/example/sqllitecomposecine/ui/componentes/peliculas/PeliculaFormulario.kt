@@ -170,8 +170,10 @@ fun PeliculaFormulario(
                 )
             }
              if (id <= 0)
-                 CapturarImagen(onselect = { uri = it })
-               //  ImagePickerWithPermission(onselect = { uri = it })
+                // CapturarImagen(onselect = { uri = it })
+                 ImagePickerWithPermission(onselect = {
+                     uri = it
+                 })
 
 
             if (!expandido) {
