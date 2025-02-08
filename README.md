@@ -3,9 +3,48 @@
 ## Acceso a la Cámara
 
 <details>
-<summary>Click to expand</summary>
+<summary>
+### Configuración</summary>
 
-This is the content of the collapsible section. You can include any Markdown-formatted text, lists, or code here.
+
+Para acceder a la cámara y hacer una fotografía se ha de pedir permisos. Recordar añadir al fichero
+Manifest los permisos oportunos:
+
+```xml
+
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-feature
+android:name="android.hardware.camera" android:required="false" />
+
+```
+
+También es necesario establecer un proveedor de recursos, en este caso de ficheros, para ello añadir
+a la aplicación en el fichero Manifest
+la siguiente entrada
+
+```xml
+
+<provider android:authorities="${applicationId}.fileprovider" android:exported="false"
+    android:grantUriPermissions="true" android:name="androidx.core.content.FileProvider">
+    <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
+</provider>
+
+```
+
+En el que se indica que los ficheros de este proveedor se definen en @xml/file_paths (en la carpeta
+res), cuyo contenido es:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <files-path name="images" path="images/" />
+    <cache-path name="cache" path="." />
+
+</paths>
+```
+
+Definiendo las rutas para almacenar las imágenes y para que la imagen se realice en la caché
 
 </details>
 
