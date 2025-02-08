@@ -3,7 +3,6 @@ package com.example.sqllitecomposecine.ui.componentes.peliculas
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
@@ -32,15 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
-import coil3.compose.rememberAsyncImagePainter
 import com.example.sqllitecomposecine.model.entidades.Pelicula
-import com.example.sqllitecomposecine.ui.componentes.commons.CapturarImagen
+import com.example.sqllitecomposecine.ui.componentes.commons.CameraCapture
 import com.example.sqllitecomposecine.ui.componentes.commons.ImageDeDirectorioLocal
-import com.example.sqllitecomposecine.ui.componentes.commons.ImagePickerWithPermission
 import com.example.sqllitecomposecine.ui.viewmodels.PeliculaViewModel
 import org.koin.androidx.compose.koinViewModel
-import java.io.File
+
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
@@ -169,11 +164,15 @@ fun PeliculaFormulario(
                     contentDescription = "Guardar",
                 )
             }
-             if (id <= 0)
-                // CapturarImagen(onselect = { uri = it })
-                 ImagePickerWithPermission(onselect = {
+             if (id <= 0){
+                /* CameraCapture {
                      uri = it
-                 })
+                 }*/
+             }
+                // CapturarImagen(onselect = { uri = it })
+                // ImagePickerWithPermission(onselect = {
+                 //    uri = it
+                 //})
 
 
             if (!expandido) {

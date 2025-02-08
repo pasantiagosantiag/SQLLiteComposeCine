@@ -94,6 +94,11 @@ dependencies {
     //datastore
     //implementation("androidx.datastore:datastore-preferences:1.1.2")
     //camara
+    implementation("androidx.camera:camera-core:1.3.0")
+    implementation("androidx.camera:camera-camera2:1.3.0")
+    implementation("androidx.camera:camera-lifecycle:1.3.0")
+    implementation("androidx.camera:camera-view:1.3.0") // PreviewView para mostrar la cámara
+    implementation("com.google.accompanist:accompanist-permissions:0.33.2-alpha") // Manejo de permisos en Compose
 
 
 //room
