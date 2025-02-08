@@ -3,9 +3,7 @@
 ## Acceso a la Cámara
 
 <details>
-<summary>
-### Configuración</summary>
-
+<summary>Configuración</summary>
 
 Para acceder a la cámara y hacer una fotografía se ha de pedir permisos. Recordar añadir al fichero
 Manifest los permisos oportunos:
@@ -48,48 +46,9 @@ Definiendo las rutas para almacenar las imágenes y para que la imagen se realic
 
 </details>
 
-### Configuración
+<details>
+<summary>Solicitando permisos</summary>
 
-Para acceder a la cámara y hacer una fotografía se ha de pedir permisos. Recordar añadir al fichero
-Manifest los permisos oportunos:
-
-```xml
-
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-feature
-android:name="android.hardware.camera" android:required="false" />
-
-```
-
-También es necesario establecer un proveedor de recursos, en este caso de ficheros, para ello añadir
-a la aplicación en el fichero Manifest
-la siguiente entrada
-
-```xml
-
-<provider android:authorities="${applicationId}.fileprovider" android:exported="false"
-    android:grantUriPermissions="true" android:name="androidx.core.content.FileProvider">
-    <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/file_paths" />
-</provider>
-
-```
-
-En el que se indica que los ficheros de este proveedor se definen en @xml/file_paths (en la carpeta
-res), cuyo contenido es:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<paths>
-    <files-path name="images" path="images/" />
-    <cache-path name="cache" path="." />
-
-</paths>
-```
-
-Definiendo las rutas para almacenar las imágenes y para que la imagen se realice en la caché
-
-### Solicitando permisos
 
 El uso de la cámara solicita permisos cada vez que se desee utilizar, para ello se crea un contrato
 solicitando permisos
@@ -127,7 +86,10 @@ Si se tiene permiso, se abre la actividad externa que proporciona el sistema ope
                 }
             }
 ```
-### Creando un componente para hacer una foto
+</details>
+<details>
+<summary> Creando un componente para hacer una foto</summary>
+
 
 Se crea un componete al que se le pasa:
 
@@ -179,3 +141,5 @@ fun CameraPhoto(contexto: Context, modifier: Modifier, onImageSelected:(Uri)->Un
 }
 
 ```
+
+</details>
