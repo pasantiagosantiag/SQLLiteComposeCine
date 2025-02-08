@@ -81,3 +81,4 @@ Si se tiene permiso, se abre la actividad externa que proporciona el sistema ope
                 }
             }
 ```
+### Creando un componente para hacer una fotro
