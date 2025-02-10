@@ -3,6 +3,8 @@ package com.example.sqllitecomposecine.ui.componentes.peliculas
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +22,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,11 +33,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import coil3.compose.rememberAsyncImagePainter
 import com.example.sqllitecomposecine.model.entidades.Pelicula
-import com.example.sqllitecomposecine.ui.componentes.commons.CameraCapture
-import com.example.sqllitecomposecine.ui.componentes.commons.ImageDeDirectorioLocal
+import com.example.sqllitecomposecine.ui.componentes.commons.CameraPhoto
+
 import com.example.sqllitecomposecine.ui.viewmodels.PeliculaViewModel
 import org.koin.androidx.compose.koinViewModel
+
+import java.io.File
 
 
 @SuppressLint("StateFlowValueCalledInComposition")
@@ -46,15 +53,12 @@ fun PeliculaFormulario(
     // Estados para los campos
     val vm: PeliculaViewModel = koinViewModel()
     val selected by vm.selected.collectAsState()
-
-
     var nombre by remember { mutableStateOf("") }//vm.selected.value.nombre) }
     var activo by remember { mutableStateOf(false) }
     var descripcion by remember { mutableStateOf("") }
     var valoracion by remember { mutableStateOf<Int>(0) }
     var duracion by remember { mutableStateOf<Int>(0) }
-    var uri by remember { mutableStateOf<Uri?>(null) }
-    var fichero by remember { mutableStateOf("") }
+    var uri by remember { mutableStateOf<Uri>(Uri.parse("")) }
     var id by remember { mutableStateOf(0L) }
     //cambio del viewmodel
     LaunchedEffect(selected) {
@@ -63,8 +67,14 @@ fun PeliculaFormulario(
         descripcion = selected.descripcion
         valoracion = selected.valoracion
         duracion = selected.duracion
-        fichero = selected.uri
+       // fichero = selected.uri
         id = selected.id
+        val file = File(context.filesDir, selected.uri)
+        if(file.exists() && !file.isDirectory)
+            uri = file.toUri()
+        else
+            uri=Uri.parse("")
+
     }
     Column(
         modifier = Modifier
@@ -108,9 +118,16 @@ fun PeliculaFormulario(
                 label = { Text("Valoración") }, modifier = Modifier.fillMaxWidth()//.weight(0.8f)
             )
         }
-        if (id > 0) {
-            ImageDeDirectorioLocal(modifier = Modifier, fileName = fichero, context = context)
-
+       
+        if (!uri.toString().equals("")) {
+            Image(
+                painter = rememberAsyncImagePainter(uri),
+                contentDescription = "imagen",
+                modifier = Modifier.weight(1f)
+            )
+        }
+        else {
+            Text(text = selected.nombre+ " "+selected.uri)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -155,7 +172,12 @@ fun PeliculaFormulario(
                     u?.descripcion = descripcion.toString()
                     u?.valoracion = valoracion
                     u?.duracion = duracion
-                    u?.let { save(it) }
+                    u?.let { save(it)
+                    vm.unSelect()
+                   // selected=vm.selected.collectAsState()
+                    }
+                    Toast.makeText(context,"Acción realizada con  éxito", Toast.LENGTH_LONG)
+
 
                 }
             ) {
@@ -165,14 +187,15 @@ fun PeliculaFormulario(
                 )
             }
              if (id <= 0){
-                /* CameraCapture {
-                     uri = it
-                 }*/
+                 CameraPhoto(context, modifier = Modifier
+
+                     .weight(0.2f),
+                     onImageSelected = {
+                         uri = it
+                     }
+
+                 )
              }
-                // CapturarImagen(onselect = { uri = it })
-                // ImagePickerWithPermission(onselect = {
-                 //    uri = it
-                 //})
 
 
             if (!expandido) {

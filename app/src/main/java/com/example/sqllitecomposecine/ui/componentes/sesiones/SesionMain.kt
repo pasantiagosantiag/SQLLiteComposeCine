@@ -60,7 +60,7 @@ fun SesionMain(
     }
     Scaffold(
         floatingActionButton = {
-            //if(searchview) {
+            if(searchview) {
             FloatingActionButton(onClick = {
                 vm.unSelect()
                 formularioEditable.value = true
@@ -71,7 +71,7 @@ fun SesionMain(
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
-            //}
+            }
         }
     ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {

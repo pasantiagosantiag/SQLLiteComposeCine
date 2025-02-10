@@ -1,5 +1,6 @@
 package com.example.sqllitecomposecine.ui.componentes.peliculas
 
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -51,15 +52,15 @@ fun PeliculaMain(modifier: Modifier = Modifier, vm: PeliculaViewModel = koinView
     }
     Scaffold(
         floatingActionButton = {
-            //if(searchview) {
-            FloatingActionButton(onClick = {
-                vm.unSelect()
-                formularioEditable.value = true
-                navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
-            }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
+            if (searchview) {
+                FloatingActionButton(onClick = {
+                    vm.unSelect()
+                    formularioEditable.value = true
+                    navigator.navigateTo(ListDetailPaneScaffoldRole.Detail)
+                }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
+                }
             }
-            //}
         }
     ) { innerPadding ->
         Column(modifier = modifier.padding(innerPadding)) {
@@ -131,11 +132,13 @@ fun PeliculaMain(modifier: Modifier = Modifier, vm: PeliculaViewModel = koinView
                     PeliculaFormulario(expandido = true, editable = formularioEditable, save = {
                         vm.save(it)
                         vm.unSelect()
+                        if (navigator.canNavigateBack()) navigator.navigateBack()
+
                     }, atras = {
                         //run {
                         if (navigator.canNavigateBack()) navigator.navigateBack()
                         //}
-                    },koinInject())
+                    }, koinInject())
 
 
                 })

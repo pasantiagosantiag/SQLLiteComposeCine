@@ -135,7 +135,10 @@ fun CameraPhoto(contexto: Context, modifier: Modifier, onImageSelected:(Uri)->Un
             permissionLauncher.launch(android.Manifest.permission.CAMERA)
             //cameraLauncher.launch(photoUri)
         }, modifier = Modifier) {
-            Text(text = "Pick a picture")
+                       androidx.compose.material3.Icon(
+                imageVector = Icons.Filled.PhotoCamera,
+                contentDescription = "Hacer fotografía",
+            )
         }
     }
 }

@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.sqllitecomposecine.model.entidades.Pelicula
-import com.example.sqllitecomposecine.ui.componentes.commons.ImageDeDirectorioLocal
+
 
 @Composable
 fun PeliculaItem(
@@ -24,7 +24,7 @@ fun PeliculaItem(
 ) {
     Row(modifier = Modifier.fillMaxWidth()) {
         Text("${item.nombre} ${item.id}", modifier = Modifier.clickable { ver() }.weight(0.40f))
-        ImageDeDirectorioLocal(modifier=Modifier.weight(0.20f),fileName = item.uri, context = context )
+        //ImageDeDirectorioLocal(modifier=Modifier.weight(0.20f),fileName = item.uri, context = context )
 
         Button(onClick = { editar() }, modifier = Modifier.weight(0.20f)) {
             androidx.compose.material3.Icon(

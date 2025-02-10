@@ -59,7 +59,7 @@ fun SalaMain(modifier: Modifier = Modifier, vm: SalaViewModel = koinViewModel())
     }
     Scaffold(
         floatingActionButton = {
-            //if(searchview) {
+            if(searchview) {
             FloatingActionButton(onClick = {
                 vm.unSelect()
                 formularioEditable.value = true
@@ -67,7 +67,7 @@ fun SalaMain(modifier: Modifier = Modifier, vm: SalaViewModel = koinViewModel())
             }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
-            //}
+            }
         }
     ) { innerPadding ->
 
